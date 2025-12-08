@@ -13,7 +13,7 @@ export const validateAssassinateMerlin = (
     return "Assassination can only occur during the assassination stage";
   }
 
-  const playerRole = game.roleAssignments[playerId];
+  const playerRole = game.roleAssignments[playerId]!;
   const evilRoles = ["minion", "mordred", "morgana", "oberon"];
   if (!evilRoles.includes(playerRole)) {
     return "Only evil players can perform the assassination";

@@ -1,9 +1,9 @@
+import Action from "@/components/Action.tsx";
+import Players from "@/components/Players.tsx";
+import Quests from "@/components/Quests.tsx";
+import VotingHistory from "@/components/VotingHistory.tsx";
+import { Game, Player } from "@/core/types.ts";
 import type { VNode } from "preact";
-import { Game, Player } from "../core/types.ts";
-import Preparing from "./Preparing.tsx";
-import Playing from "./Playing.tsx";
-import Assassination from "./Assassination.tsx";
-import GameComplete from "./GameComplete.tsx";
 
 type Props = {
   game: Game;
@@ -11,17 +11,13 @@ type Props = {
   error: string | null;
 };
 
-export default (props: Props): VNode => {
-  switch (props.game.stage) {
-    case "preparing":
-      return <Preparing {...props} />;
-    case "playing":
-      return <Playing {...props} />
-    case "assassination":
-      return <Assassination {...props} />
-    case "good-wins":
-    case "evil-wins-by-quests":
-    case "evil-wins-by-assassination":
-      return <GameComplete {...props} />
-  }
+export default ({ game, player, error }: Props): VNode => {
+  return (
+    <>
+      <Players game={game} player={player} />
+      <Quests game={game} />
+      <Action game={game} player={player} error={error} />
+      <VotingHistory game={game} />
+    </>
+  );
 };

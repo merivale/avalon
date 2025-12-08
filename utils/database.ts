@@ -5,7 +5,10 @@ type GameData = Omit<Game, "players"> & { playerIds: string[] };
 const kv = await Deno.openKv();
 
 export const saveGame = async (game: Game): Promise<void> => {
-  const gameToSave: GameData = { ...game, playerIds: game.players.map((p) => p.id) };
+  const gameToSave: GameData = {
+    ...game,
+    playerIds: game.players.map((p) => p.id),
+  };
   await kv.set(["games", game.id], gameToSave);
 };
 

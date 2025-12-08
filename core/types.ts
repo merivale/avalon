@@ -13,6 +13,14 @@ export type GameOptions = {
   oberon: boolean;
 };
 
+export const defaultOptions: GameOptions = {
+  merlin: false,
+  percival: false,
+  mordred: false,
+  morgana: false,
+  oberon: false,
+};
+
 // game state
 export type Game = {
   id: string;
@@ -50,11 +58,13 @@ export type Role = SpecialRole | "servant" | "minion";
 // quests
 export type Quest = {
   stage: QuestStage;
+  fails: number;
   teamProposals: TeamProposal[];
   votes: Record<string, boolean>;
 };
 
 export type QuestStage =
+  | "not-started"
   | "team-building"
   | "voting"
   | "questing"

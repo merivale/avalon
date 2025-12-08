@@ -1,10 +1,8 @@
-import { Page } from "@/pages/Page.tsx";
-import type { Player } from "@/core/types.ts";
 import type { ComponentChildren } from "preact";
 import { renderToString } from "preact-render-to-string";
 
-export const htmlResponse = (content: ComponentChildren, player: Player): Response => {
-  const html = "<!DOCTYPE html>" + renderToString(<Page player={player}>{content}</Page>);
+export const htmlResponse = (content: ComponentChildren): Response => {
+  const html = "<!DOCTYPE html>" + renderToString(<>{content}</>);
   return new Response(html, {
     headers: { "Content-Type": "text/html" },
   });
@@ -20,7 +18,10 @@ export const fileResponse = async (
   });
 };
 
-export const redirectResponse = (location: string, request: Request): Response => {
+export const redirectResponse = (
+  location: string,
+  request: Request,
+): Response => {
   let finalLocation = location;
 
   // preserve playerId query param from request or referer URL
@@ -37,7 +38,10 @@ export const redirectResponse = (location: string, request: Request): Response =
     const locationUrl = new URL(location, url);
     if (!locationUrl.searchParams.has("playerId")) {
       locationUrl.searchParams.set("playerId", playerIdParam);
-      finalLocation = locationUrl.pathname + (locationUrl.searchParams.toString() ? `?${locationUrl.searchParams.toString()}` : "");
+      finalLocation = locationUrl.pathname +
+        (locationUrl.searchParams.toString()
+          ? `?${locationUrl.searchParams.toString()}`
+          : "");
     }
   }
 

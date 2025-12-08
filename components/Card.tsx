@@ -1,13 +1,13 @@
-import type { VNode, ComponentChildren } from "preact";
+import type { ComponentChildren, VNode } from "preact";
 
-type CardProps = {
+type Props = {
   children: ComponentChildren;
   class?: string;
 };
 
-export const Card = ({ children, class: className = "" }: CardProps): VNode => {
+export default ({ class: className, children }: Props): VNode => {
   return (
-    <div class={`bg-white rounded-xl p-8 shadow-lg ${className}`}>
+    <div class={`bg-white p-4 shadow ${className ?? ""}`}>
       {children}
     </div>
   );

@@ -13,7 +13,7 @@ export const validateVoteOnTeam = (
     return "Votes can only be cast during the voting stage";
   }
 
-  if (!game.playerIds.includes(playerId)) {
+  if (!game.players.some((player) => player.id === playerId)) {
     return "Invalid player ID";
   }
 
@@ -42,9 +42,9 @@ export const voteOnTeam = (
   playerId: string,
   approve: boolean,
 ): Game => {
-  const quest = game.quests[game.questIndex];
+  const quest = game.quests[game.questIndex]!;
   const proposalIndex = quest.teamProposals.length - 1;
-  const currentProposal = quest.teamProposals[proposalIndex];
+  const currentProposal = quest.teamProposals[proposalIndex]!;
 
   // Record the vote in the proposal
   const updatedProposal = {
@@ -53,7 +53,7 @@ export const voteOnTeam = (
   };
 
   // If votes are still pending, just update the proposal
-  if (Object.keys(updatedProposal.votes).length < game.playerIds.length) {
+  if (Object.keys(updatedProposal.votes).length < game.players.length) {
     const updatedQuest: Quest = {
       ...quest,
       teamProposals: quest.teamProposals.with(proposalIndex, updatedProposal),
@@ -67,7 +67,7 @@ export const voteOnTeam = (
 
   // If all votes are in, determine the outcome
   const approvals = Object.values(updatedProposal.votes).filter(Boolean).length;
-  const rejections = game.playerIds.length - approvals;
+  const rejections = game.players.length - approvals;
 
   // Team approved - move to questing stage
   if (approvals > rejections) {
@@ -84,7 +84,7 @@ export const voteOnTeam = (
   }
 
   // Team rejected - move back to team-building with next leader
-  const nextLeaderIndex = (game.leaderIndex + 1) % game.playerIds.length;
+  const nextLeaderIndex = (game.leaderIndex + 1) % game.players.length;
   const updatedQuest: Quest = {
     ...quest,
     stage: "team-building",

@@ -1,31 +1,35 @@
 import type { VNode } from "preact";
 
-type ButtonVariant = "primary" | "secondary";
-
-type ButtonProps = {
-  type?: "submit" | "button" | "reset";
-  variant?: ButtonVariant;
+type Props = {
+  type?: "button" | "submit" | "reset";
   disabled?: boolean;
   children: VNode | string;
+  color?: "blue" | "red" | "green" | "gray";
   class?: string;
 };
 
-export const Button = ({ 
-  type = "button", 
-  variant = "primary", 
-  disabled = false, 
+export default ({
+  type = "submit",
+  disabled = false,
   children,
-  class: className = ""
-}: ButtonProps): VNode => {
-  const variantClasses = variant === "primary"
-    ? "bg-primary bg-primary-hover"
-    : "bg-secondary bg-secondary-hover";
-  
+  color = "blue",
+  class: className,
+}: Props): VNode => {
+  const variantClasses = color === "gray" || disabled
+    ? "bg-gray hover:bg-gray-dark"
+    : color === "blue"
+    ? "bg-blue hover:bg-blue-dark"
+    : color === "red"
+    ? "bg-red hover:bg-red-dark"
+    : "bg-green hover:bg-green-dark";
+
   return (
-    <button 
-      type={type} 
+    <button
+      type={type}
       disabled={disabled}
-      class={`btn ${variantClasses} text-white shadow ${className}`}
+      class={`${variantClasses} ${
+        className ?? ""
+      } text-white py-1 px-2 cursor-pointer disabled:cursor-not-allowed`}
     >
       {children}
     </button>

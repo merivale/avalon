@@ -1,7 +1,10 @@
 import handleNotFound from "@/handlers/notFound.tsx";
 import routes from "@/handlers/routes.tsx";
 import { getPlayerId, setPlayerIdCookie } from "@/utils/session.ts";
-import { getOrCreatePlayer } from "./utils/database.ts";
+import { getOrCreatePlayer } from "@/utils/database.ts";
+import fixtures from "@/utils/fixtures.ts";
+
+fixtures();
 
 const port = 8080;
 

@@ -1,3 +1,4 @@
+import { getRequiredTeamSize } from "@/core/gameConfig.ts";
 import type { Game, Quest } from "@/core/types.ts";
 
 /**
@@ -9,7 +10,7 @@ export const validateProposeTeam = (
   leaderId: string,
   teamMemberIds: string[],
 ): string | null => {
-  const quest = game.quests[game.questIndex];
+  const quest = game.quests[game.questIndex]!;
   if (game.stage !== "playing" || quest.stage !== "team-building") {
     return "Teams can only be proposed during the team-building stage";
   }
@@ -18,13 +19,13 @@ export const validateProposeTeam = (
     return "Maximum of 5 team proposals reached for this quest";
   }
 
-  const leader = game.playerIds[game.leaderIndex];
-  if (leader !== leaderId) {
+  const leader = game.players[game.leaderIndex]!;
+  if (leader.id !== leaderId) {
     return "Only the current leader can propose a team";
   }
 
   const requiredSize = getRequiredTeamSize(
-    game.playerIds.length,
+    game.players.length,
     game.questIndex + 1,
   );
   if (teamMemberIds.length !== requiredSize) {
@@ -32,7 +33,7 @@ export const validateProposeTeam = (
   }
 
   const proposedMembersAreValid = teamMemberIds.every((id) =>
-    game.playerIds.includes(id)
+    game.players.some((p) => p.id === id)
   );
   if (!proposedMembersAreValid) {
     return "Team contains invalid player IDs";
@@ -57,12 +58,19 @@ export const proposeTeam = (
     votes: {},
   };
 
-  const quest = game.quests[game.questIndex];
+  const quest = game.quests[game.questIndex]!;
+  const allAccept = game.players.reduce((acc, player) => {
+    acc[player.id] = true;
+    return acc;
+  }, {} as Record<string, boolean>);
   const updatedQuest: Quest = quest.teamProposals.length === 4
     ? {
       ...quest,
       stage: "questing", // The 5th proposal is automatically accepted
-      teamProposals: [...quest.teamProposals, proposal],
+      teamProposals: [...quest.teamProposals, {
+        ...proposal,
+        votes: allAccept,
+      }],
     }
     : {
       ...quest,
@@ -76,18 +84,4 @@ export const proposeTeam = (
       index === game.questIndex ? updatedQuest : q
     ),
   };
-};
-
-const QUEST_TEAM_SIZES: Record<number, number[]> = {
-  5: [2, 3, 2, 3, 3],
-  6: [2, 3, 4, 3, 4],
-  7: [2, 3, 3, 4, 4],
-  8: [3, 4, 4, 5, 5],
-  9: [3, 4, 4, 5, 5],
-  10: [3, 4, 4, 5, 5],
-};
-
-export const getRequiredTeamSize = (playerCount: number, questNumber: number): number => {
-  const questIndex = questNumber - 1;
-  return QUEST_TEAM_SIZES[playerCount]?.[questIndex] ?? 0;
 };

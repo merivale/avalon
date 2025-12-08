@@ -1,7 +1,7 @@
 import {
   assassinateMerlin,
   validateAssassinateMerlin,
-} from "../core/assassinateMerlin.ts";
+} from "@/core/assassinateMerlin.ts";
 import { joinGame, validateJoinGame } from "@/core/joinGame.ts";
 import newGame from "@/core/newGame.ts";
 import { proposeTeam, validateProposeTeam } from "@/core/proposeTeam.ts";
@@ -34,7 +34,7 @@ export const handleUpdateName = async (
 export const handleNewGame = async (
   { request, player }: HandlerArgs,
 ): Promise<Response> => {
-  const game = joinGame(newGame(), player.id);
+  const game = joinGame(newGame(), player);
   await saveGame(game);
   return redirectResponse(`/game/${game.id}`, request);
 };
@@ -61,7 +61,7 @@ export const handleJoinGame = async (
     return redirectResponse(`${refererPath}?error=Game not found`, request);
   }
 
-  const validationError = validateJoinGame(game, player.id);
+  const validationError = validateJoinGame(game, player);
   if (validationError) {
     return redirectResponse(
       `${refererPath}?error=${encodeURIComponent(validationError)}`,
@@ -69,7 +69,7 @@ export const handleJoinGame = async (
     );
   }
 
-  const updatedGame = joinGame(game, player.id);
+  const updatedGame = joinGame(game, player);
   await saveGame(updatedGame);
   broadcastGameUpdate(gameId);
   return redirectResponse(`/game/${gameId}`, request);
@@ -123,9 +123,17 @@ export const handleProposeTeam = async (
   }
 
   const formData = await request.formData();
-  const teamMemberIds = formData.getAll("team").map((v) => v.toString());
+  const playerIdsField = formData.get("player-ids");
+  const playerIds = typeof playerIdsField === "string"
+    ? playerIdsField.split(",")
+    : [];
+  const proposedPlayerIds = playerIds.filter((id) => formData.get(id));
 
-  const validationError = validateProposeTeam(game, player.id, teamMemberIds);
+  const validationError = validateProposeTeam(
+    game,
+    player.id,
+    proposedPlayerIds,
+  );
   if (validationError) {
     return redirectResponse(
       `/game/${gameId}?error=${encodeURIComponent(validationError)}`,
@@ -133,7 +141,7 @@ export const handleProposeTeam = async (
     );
   }
 
-  const updatedGame = proposeTeam(game, player.id, teamMemberIds);
+  const updatedGame = proposeTeam(game, player.id, proposedPlayerIds);
   await saveGame(updatedGame);
   broadcastGameUpdate(gameId);
 

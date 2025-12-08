@@ -1,14 +1,12 @@
 import type { VNode } from "preact";
 
-type ErrorProps = {
-  message: string | null;
+type Props = {
+  message: string;
 };
 
-export const Error = ({ message }: ErrorProps): VNode | null => {
-  if (!message) return null;
-  
+export default ({ message }: Props): VNode => {
   return (
-    <div class="p-4 bg-red-100 text-red-900 rounded mb-6 font-medium">
+    <div class="py-1 px-2 bg-red text-white">
       {message}
     </div>
   );

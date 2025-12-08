@@ -1,12 +1,19 @@
-import type { Game } from "@/core/types.ts";
+import type { Game, Quest } from "@/core/types.ts";
 
-export default (): Game => ({
-    id: crypto.randomUUID(),
-    stage: "preparing",
-    playerIds: [],
-    roleAssignments: {},
-    leaderIndex: 0,
-    questIndex: 0,
-    quests: [],
-    assassinationTargetId: null,
+export default (id?: string): Game => ({
+  id: id ?? crypto.randomUUID(),
+  stage: "preparing",
+  players: [],
+  roleAssignments: {},
+  leaderIndex: 0,
+  questIndex: 0,
+  quests: Array(5).fill(createEmptyQuest()),
+  assassinationTargetId: null,
+});
+
+const createEmptyQuest = (): Quest => ({
+  stage: "not-started",
+  fails: 0,
+  teamProposals: [],
+  votes: {},
 });

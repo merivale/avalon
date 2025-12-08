@@ -14,12 +14,9 @@
     "preact-render-to-string": "npm:preact-render-to-string@^6.6.3"
   },
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "esnext",
-      "deno.ns",
-      "deno.unstable"
-    ],
+    "lib": ["dom", "esnext", "deno.ns", "deno.unstable"],
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
     "jsx": "precompile",
     "jsxImportSource": "preact"
   }

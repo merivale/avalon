@@ -1,73 +1,58 @@
 import type { VNode } from "preact";
 
-type InputProps = {
+type Props = {
   type?: "text" | "checkbox";
   id?: string;
+  label: string;
   name: string;
   placeholder?: string;
+  value?: string;
+  checked?: boolean;
   required?: boolean;
   maxLength?: number;
-  value?: string;
-  class?: string;
-  label?: string;
 };
 
-export const Input = ({
+export default ({
   type = "text",
   id,
+  label,
   name,
   placeholder,
+  value,
+  checked,
   required = false,
   maxLength,
-  value,
-  class: className = "",
-  label
-}: InputProps): VNode => {
-  const inputId = id || name;
-  
-  if (type === "checkbox") {
-    const checkbox = (
-      <input
-        type="checkbox"
-        id={inputId}
-        name={name}
-        value={value}
-        class={`w-4 h-4 ${className}`}
-      />
-    );
-    
-    if (label) {
-      return (
-        <label htmlFor={inputId} class="flex items-center gap-2 cursor-pointer">
-          {checkbox}
-          <span class="text-sm">{label}</span>
-        </label>
-      );
-    }
-    
-    return checkbox;
-  }
+}: Props): VNode => {
+  const inputId = id ?? name;
 
-  const textInput = (
-    <input
-      type={type}
-      id={inputId}
-      name={name}
-      placeholder={placeholder}
-      required={required}
-      maxLength={maxLength}
-      class={`input ${className}`}
-    />
-  );
-  
-  if (label) {
-    return (
-      <div class="flex flex-col gap-1">
-        <label htmlFor={inputId} class="font-medium text-primary text-sm">{label}</label>
-        {textInput}
+  return type === "checkbox"
+    ? (
+      <label
+        htmlFor={inputId}
+        class="py-1 px-2 flex gap-2 items-center cursor-pointer"
+      >
+        <input
+          type="checkbox"
+          id={inputId}
+          name={name}
+          checked={checked}
+        />
+        <span>{label}</span>
+      </label>
+    )
+    : (
+      <div class="flex gap-2 items-center">
+        <label htmlFor={inputId}>{label}</label>
+        <input
+          type={type}
+          id={inputId}
+          name={name}
+          placeholder={placeholder}
+          value={value}
+          required={required}
+          maxLength={maxLength}
+          class="border py-1 px-2"
+        />
       </div>
     );
-  }
-  
-  return textInput;
 };

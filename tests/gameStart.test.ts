@@ -1,8 +1,5 @@
-import { assertEquals } from "@std/assert";
 import { afterAll, beforeAll, describe, it } from "@std/testing/bdd";
 import { type Browser, chromium } from "playwright";
-
-const BASE_URL = "http://localhost:8080";
 
 let browser: Browser;
 

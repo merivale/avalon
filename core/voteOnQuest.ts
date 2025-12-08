@@ -1,3 +1,4 @@
+import { getRequiredFails } from "@/core/gameConfig.ts";
 import type { Game, Quest } from "@/core/types.ts";
 
 /**
@@ -13,7 +14,7 @@ export const validateVoteOnQuest = (
     return "Quest votes can only be cast during the questing stage";
   }
 
-  const currentProposal = quest.teamProposals[quest.teamProposals.length - 1];
+  const currentProposal = quest.teamProposals.at(-1)!;
   if (!currentProposal.teamMemberIds.includes(playerId)) {
     return "Player is not on the quest team";
   }
@@ -38,17 +39,14 @@ export const voteOnQuest = (
   playerId: string,
   succeed: boolean,
 ): Game => {
-  const quest = game.quests[game.questIndex];
+  const quest = game.quests[game.questIndex]!;
 
   // Record the vote
   const updatedVotes = { ...quest.votes, [playerId]: succeed };
 
   // If votes are still pending, just update the quest
-  if (
-    Object.keys(updatedVotes).length < quest.teamProposals[
-      quest.teamProposals.length - 1
-    ].teamMemberIds.length
-  ) {
+  const teamProposal = quest.teamProposals.at(-1)!;
+  if (Object.keys(updatedVotes).length < teamProposal.teamMemberIds.length) {
     const updatedQuest: Quest = {
       ...quest,
       votes: updatedVotes,
@@ -61,19 +59,22 @@ export const voteOnQuest = (
 
   // All votes are in - determine quest outcome
   const failVotes = Object.values(updatedVotes).filter((v) => !v).length;
-  const requiredFails = game.playerIds.length >= 7 && game.questIndex === 3
-    ? 2
-    : 1;
+  const requiredFails = getRequiredFails(
+    game.players.length,
+    game.questIndex + 1,
+  );
   const questSucceeded = failVotes < requiredFails;
   const updatedQuest: Quest = {
     ...quest,
     stage: questSucceeded ? "success" : "failure",
+    fails: failVotes,
     votes: updatedVotes,
   };
   const updatedQuests = game.quests.with(game.questIndex, updatedQuest);
 
   // Check for victory by evil team
-  const failedQuests = updatedQuests.filter((q) => q.stage === "failure").length;
+  const failedQuests =
+    updatedQuests.filter((q) => q.stage === "failure").length;
   if (failedQuests >= 3) {
     return {
       ...game,
@@ -83,7 +84,8 @@ export const voteOnQuest = (
   }
 
   // Check for victory by good team
-  const successfulQuests = updatedQuests.filter((q) => q.stage === "success").length;
+  const successfulQuests =
+    updatedQuests.filter((q) => q.stage === "success").length;
   if (successfulQuests >= 3) {
     // If Merlin is not in play, good team wins immediately
     const merlinInPlay = Object.values(game.roleAssignments).includes("merlin");
@@ -104,10 +106,15 @@ export const voteOnQuest = (
   }
 
   // No victory yet, proceed to next quest with next leader
+  const nextQuestIndex = game.questIndex + 1;
+  const nextQuestUpdated: Quest = {
+    ...game.quests[nextQuestIndex]!,
+    stage: "team-building",
+  };
   return {
     ...game,
-    leaderIndex: (game.leaderIndex + 1) % game.playerIds.length,
-    questIndex: game.questIndex + 1,
-    quests: game.quests.with(game.questIndex, updatedQuest),
+    leaderIndex: (game.leaderIndex + 1) % game.players.length,
+    questIndex: nextQuestIndex,
+    quests: updatedQuests.with(nextQuestIndex, nextQuestUpdated),
   };
 };

@@ -1,4 +1,6 @@
+import { getEvilCount, MAX_PLAYERS, MIN_PLAYERS } from "@/core/gameConfig.ts";
 import type { Game, GameOptions, Role } from "@/core/types.ts";
+import { defaultOptions } from "@/core/types.ts";
 
 /**
  * Validates if a game can be started.
@@ -6,33 +8,35 @@ import type { Game, GameOptions, Role } from "@/core/types.ts";
  */
 export const validateStartGame = (
   game: Game,
-  specialRoles: GameOptions,
+  overrides: Partial<GameOptions> = {},
 ): string | null => {
   if (game.stage !== "preparing") {
     return "Game has already started";
   }
 
-  if (game.players.length < 5) {
-    return "Need at least 5 players to start";
+  if (game.players.length < MIN_PLAYERS) {
+    return `Need at least ${MIN_PLAYERS} players to start`;
   }
 
-  if (game.players.length > 10) {
-    return "Maximum 10 players allowed";
+  if (game.players.length > MAX_PLAYERS) {
+    return `Maximum ${MAX_PLAYERS} players allowed`;
   }
 
   // Validate special role combinations
   const evilCount = getEvilCount(game.players.length);
   const goodCount = game.players.length - evilCount;
 
+  const options = { ...defaultOptions, ...overrides };
+
   const evilSpecialRoles = [
-    specialRoles.mordred,
-    specialRoles.morgana,
-    specialRoles.oberon,
+    options.mordred,
+    options.morgana,
+    options.oberon,
   ].filter(Boolean).length;
 
   const goodSpecialRoles = [
-    specialRoles.merlin,
-    specialRoles.percival,
+    options.merlin,
+    options.percival,
   ].filter(Boolean).length;
 
   if (evilSpecialRoles > evilCount) {
@@ -44,13 +48,13 @@ export const validateStartGame = (
   }
 
   // Percival requires Merlin
-  if (specialRoles.percival && !specialRoles.merlin) {
+  if (options.percival && !options.merlin) {
     return "Percival requires Merlin to be in the game";
   }
 
   // Morgana requires Merlin and Percival to be meaningful
   if (
-    specialRoles.morgana && (!specialRoles.merlin || !specialRoles.percival)
+    options.morgana && (!options.merlin || !options.percival)
   ) {
     return "Morgana requires both Merlin and Percival to be in the game";
   }
@@ -62,7 +66,11 @@ export const validateStartGame = (
  * Starts a game (assigns roles to all players and moves to the first quest).
  * Assumes validation has been done via validateStartGame.
  */
-export const startGame = (game: Game, options: GameOptions): Game => {
+export const startGame = (
+  game: Game,
+  overrides: Partial<GameOptions> = {},
+): Game => {
+  const options = { ...defaultOptions, ...overrides };
   const playerCount = game.players.length;
   const evilCount = getEvilCount(playerCount);
   const goodCount = playerCount - evilCount;
@@ -103,23 +111,13 @@ export const startGame = (game: Game, options: GameOptions): Game => {
     ...game,
     stage: "playing",
     roleAssignments,
-    quests: [
-      {
-        stage: "team-building",
-        teamProposals: [],
-        votes: {},
-      }
-    ],
+    quests: game.quests.with(0, {
+      stage: "team-building",
+      fails: 0,
+      teamProposals: [],
+      votes: {},
+    }),
   };
-};
-
-/**
- * Returns the number of evil players based on total player count.
- */
-const getEvilCount = (playerCount: number): number => {
-  if (playerCount <= 6) return 2;
-  if (playerCount <= 9) return 3;
-  return 4;
 };
 
 /**
@@ -129,7 +127,7 @@ const shuffle = <Type>(array: Type[]): Type[] => {
   const result = [...array];
   for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
+    [result[i], result[j]] = [result[j]!, result[i]!];
   }
   return result;
 };
