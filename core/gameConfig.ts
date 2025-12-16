@@ -1,4 +1,4 @@
-import { Role } from "@/core/types.ts";
+import { Player, Role } from "@/core/types.ts";
 
 // number of players
 export const MAX_PLAYERS = 10;
@@ -73,4 +73,20 @@ export const getVisibleRoleForPlayer = (
     default:
       return viewerRole satisfies never;
   }
+};
+
+// list of players (for showing a team proposal or questing team)
+export const teamList = (players: Player[]): string => {
+  if (players.length === 0) {
+    return "";
+  }
+  if (players.length === 1) {
+    return players[0]!.displayName;
+  }
+  if (players.length === 2) {
+    return `${players[0]!.displayName} and ${players[1]!.displayName}`;
+  }
+  const allButLast = players.slice(0, -1).map((p) => p.displayName).join(", ");
+  const last = players[players.length - 1]!.displayName;
+  return `${allButLast}, and ${last}`;
 };

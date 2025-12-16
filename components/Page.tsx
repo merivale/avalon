@@ -41,7 +41,7 @@ export default ({ children, player }: Page): VNode => {
       <body>
         <header class="bg-white shadow">
           <Container class="items-center">
-            <h1 class="text-2xl font-bold">
+            <h1 class="text-2xl font-bold w-full">
               <a href="/">Avalon</a>
             </h1>
             <form

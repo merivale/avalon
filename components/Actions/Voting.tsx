@@ -3,6 +3,7 @@ import Card from "@/components/Card.tsx";
 import Error from "@/components/Error.tsx";
 import type { Game, Player } from "@/core/types.ts";
 import type { VNode } from "preact";
+import { teamList } from "@/core/gameConfig.ts";
 
 type Props = {
   game: Game;
@@ -23,10 +24,10 @@ export default ({ game, player, error }: Props): VNode => {
     <Card class="grid-span-2 flex flex-col gap-4">
       {error && <Error message={error} />}
       <div class="flex gap-4 justify-between">
-        <p>
+        <p class="py-2">
           {player.id === proposer.id ? "You are" : `${proposer.displayName} is`}
           {" "}
-          proposing: {teamMembers.map((p) => p.displayName).join(", ")}
+          proposing: {teamList(teamMembers)}
         </p>
         {playersVote === undefined
           ? (
@@ -39,7 +40,7 @@ export default ({ game, player, error }: Props): VNode => {
               </form>
             </div>
           )
-          : <p>You have {playersVote ? "approved" : "rejected"} this team.</p>}
+          : <p class="py-2">You have {playersVote ? "approved" : "rejected"} this team.</p>}
       </div>
     </Card>
   );

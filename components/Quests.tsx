@@ -1,6 +1,7 @@
 import Card from "@/components/Card.tsx";
 import type { Game, Quest, QuestStage } from "@/core/types.ts";
 import type { VNode } from "preact";
+import { teamList } from "../core/gameConfig.ts";
 
 type Props = {
   game: Game;
@@ -46,18 +47,14 @@ const questMessage = (game: Game, quest: Quest): string => {
     case "team-building":
       return `${leader.displayName} is proposing a team...`;
     case "voting":
-      return `${leader.displayName} has proposed ${
-        teamMembers.map((p) => p.displayName).join(", ")
-      }...`;
+      return `${leader.displayName} has proposed ${teamList(teamMembers)}...`;
     case "questing":
-      return `${
-        teamMembers.map((p) => p.displayName).join(", ")
-      } are going on the quest...`;
+      return `${teamList(teamMembers)} are going on the quest...`;
     case "success":
-      return `${teamMembers.map((p) => p.displayName).join(", ")}`;
+      return `${teamList(teamMembers)}`;
     case "failure":
-      return `${
-        teamMembers.map((p) => p.displayName).join(", ")
-      } (${quest.fails} fail${quest.fails === 1 ? "" : "s"})`;
+      return `${teamList(teamMembers)} (${quest.fails} fail${
+        quest.fails === 1 ? "" : "s"
+      })`;
   }
 };

@@ -165,6 +165,14 @@ main {
   width: 1200px;
 }
 
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
 /* Typography Utilities */
 .text-xs {
   font-size: 0.75rem;
@@ -186,6 +194,14 @@ main {
 }
 .text-3xl {
   font-size: 1.75rem;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .font-medium {

@@ -29,7 +29,7 @@ export default ({
     ? (
       <label
         htmlFor={inputId}
-        class="py-1 px-2 flex gap-2 items-center cursor-pointer"
+        class="py-2 px-4 flex gap-2 items-center cursor-pointer font-semibold"
       >
         <input
           type="checkbox"
@@ -42,7 +42,7 @@ export default ({
     )
     : (
       <div class="flex gap-2 items-center">
-        <label htmlFor={inputId}>{label}</label>
+        <label htmlFor={inputId} class="font-semibold nowrap">{label}</label>
         <input
           type={type}
           id={inputId}
@@ -51,7 +51,7 @@ export default ({
           value={value}
           required={required}
           maxLength={maxLength}
-          class="border py-1 px-2"
+          class="border py-2 px-4"
         />
       </div>
     );

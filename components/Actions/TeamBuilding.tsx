@@ -54,7 +54,7 @@ export default ({ game, player, error }: Props): VNode => {
           </>
         )
         : (
-          <p>
+          <p class="py-2">
             Waiting for {leader.displayName} to propose a team of{" "}
             {requiredTeamSize} players...
           </p>

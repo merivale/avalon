@@ -15,10 +15,12 @@ export default ({ game, player, error }: Props): VNode => {
   return (
     <>
       <Card class="flex flex-col gap-4">
+        <h2 class="text-xl font-bold">Game Id</h2>
+        <code class="bg-light-gray py-2 px-4 rounded">{game.id}</code>
         <h2 class="text-xl font-bold">Players in Game</h2>
         <ul class="flex flex-col gap-2">
           {game.players.map((player) => (
-            <li key={player.id} class="bg-light-gray py-1 px-2">
+            <li key={player.id} class="bg-light-gray py-2 px-4">
               {player.displayName}
             </li>
           ))}
@@ -31,41 +33,41 @@ export default ({ game, player, error }: Props): VNode => {
         )}
       </Card>
       <Card class="flex flex-col gap-4">
-        {error && <Error message={error} />}
         <h2 class="text-xl font-bold">Start Game</h2>
         {game.players.length < 5
           ? <p>At least 5 players are required to start the game.</p>
           : <p>Choose special roles to start the game.</p>}
+        {error && <Error message={error} />}
         <form
           method="post"
           action={`/game/${game.id}/start`}
-          class="flex flex-col gap-4"
+          class="h-full flex flex-col gap-4 justify-between"
         >
           <div>
             <Input
               type="checkbox"
               name="merlin"
-              label="Merlin (Good)"
+              label="Merlin (Good) - knows evil players"
             />
             <Input
               type="checkbox"
               name="percival"
-              label="Percival (Good)"
+              label="Percival (Good) - knows who Merlin is"
             />
             <Input
               type="checkbox"
               name="mordred"
-              label="Mordred (Evil)"
+              label="Mordred (Evil) - hidden from Merlin"
             />
             <Input
               type="checkbox"
               name="morgana"
-              label="Morgana (Evil)"
+              label="Morgana (Evil) - appears as Merlin to Percival"
             />
             <Input
               type="checkbox"
               name="oberon"
-              label="Oberon (Evil)"
+              label="Oberon (Evil) - unknown to other evil players"
             />
           </div>
           <Button

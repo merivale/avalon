@@ -13,6 +13,10 @@ type Props = {
 };
 
 export default ({ game, player, error }: Props): VNode => {
+  const merlin = game.players.find((p) =>
+    game.roleAssignments[p.id] === "merlin"
+  );
+
   switch (game.stage) {
     case "preparing":
       return <Card class="grid-span-2">Waiting for game to start...</Card>;
@@ -32,12 +36,39 @@ export default ({ game, player, error }: Props): VNode => {
     case "assassination":
       return <Assassinating game={game} player={player} error={error} />;
     case "good-wins":
-      return <Card class="grid-span-2">Good team wins! 🎉</Card>;
+      return (
+        <Card class="grid-span-2">
+          <h3 class="font-semibold">
+            Victory for the Loyal Servants of Arthur
+          </h3>
+          <p>
+            {merlin !== undefined
+              ? `The loyal servants of Arthur succeeded three quests and Merlin (${merlin.displayName}) remained hidden! 🎉`
+              : "The loyal servants of Arthur succeeded three quests! 🎉"}
+          </p>
+        </Card>
+      );
     case "evil-wins-by-quests":
-      return <Card class="grid-span-2">Evil team wins by quests! 🥳</Card>;
+      return (
+        <Card class="grid-span-2">
+          <h3 class="font-semibold">
+            Victory for the Minions of Mordred
+          </h3>
+          <p>The minions of Mordred failed three quests! 🥳</p>
+        </Card>
+      );
     case "evil-wins-by-assassination":
       return (
-        <Card class="grid-span-2">Evil team wins by assassination! 🥳</Card>
+        <Card class="grid-span-2">
+          <h3 class="font-semibold">
+            Victory for the Minions of Mordred
+          </h3>
+          <p>
+            {merlin !== undefined
+              ? `The minions of Mordred correctly identified ${merlin.displayName} as Merlin. The minions of Mordred win by assassination! 🥳`
+              : "The minions of Mordred win by assassination! 🥳"}
+          </p>
+        </Card>
       );
   }
 };

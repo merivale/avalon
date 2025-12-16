@@ -88,12 +88,12 @@ export const handleStartGame = async (
 
   const formData = await request.formData();
   const specialRoles = {
-    merlin: formData.get("merlin") === "true",
-    percival: formData.get("percival") === "true",
-    assassin: formData.get("assassin") === "true",
-    mordred: formData.get("mordred") === "true",
-    morgana: formData.get("morgana") === "true",
-    oberon: formData.get("oberon") === "true",
+    merlin: formData.get("merlin") === "on",
+    percival: formData.get("percival") === "on",
+    assassin: formData.get("assassin") === "on",
+    mordred: formData.get("mordred") === "on",
+    morgana: formData.get("morgana") === "on",
+    oberon: formData.get("oberon") === "on",
   };
 
   const validationError = validateStartGame(game, specialRoles);
@@ -264,12 +264,34 @@ export const handleAssassinateMerlin = async (
   }
 
   const formData = await request.formData();
-  const targetPlayerId = formData.get("targetPlayerId")?.toString().trim();
+  const playerIdsField = formData.get("player-ids");
+  const playerIds = typeof playerIdsField === "string"
+    ? playerIdsField.split(",")
+    : [];
+  const proposedPlayerIds = playerIds.filter((id) => formData.get(id));
 
+  if (proposedPlayerIds.length === 0) {
+    return redirectResponse(
+      `/game/${gameId}?error=${encodeURIComponent(
+        "You must select a target to assassinate",
+      )}`,
+      request,
+    );
+  }
+  if (proposedPlayerIds.length > 1) {
+    return redirectResponse(
+      `/game/${gameId}?error=${encodeURIComponent(
+        "You can only assassinate one player",
+      )}`,
+      request,
+    );
+  }
+
+  const targetPlayerId = proposedPlayerIds[0]!;
   const validationError = validateAssassinateMerlin(
     game,
     player.id,
-    targetPlayerId!,
+    targetPlayerId,
   );
   if (validationError) {
     return redirectResponse(

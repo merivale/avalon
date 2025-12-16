@@ -19,7 +19,8 @@ export default ({ game, player }: Props): VNode => {
   return (
     <Card class="flex flex-col gap-4">
       <h2 class="text-xl font-bold">Players</h2>
-      <ul class="flex flex-col gap-2">
+      <table>
+        <tbody>
         {game.players.map((p, index) => {
           const isLeader = game.leaderIndex === index;
           const role = game.roleAssignments[p.id]!;
@@ -33,18 +34,15 @@ export default ({ game, player }: Props): VNode => {
             : roleIcons[visibleRole];
 
           return (
-            <li
-              key={p.id}
-              class={`flex gap-2 ${isLeader ? "font-semibold" : ""}`}
-            >
-              <span class="cursor-pointer" title={roleDescription}>
-                {roleIcon}
-              </span>
-              <span>{p.displayName} {isLeader && "⭐"}</span>
-            </li>
+            <tr key={p.id}>
+              <td class="px-2">{isLeader && "⭐"}</td>
+              <td class={`px-2 nowrap ${p.id === player.id ? "font-semibold" : ""}`}>{roleIcon} {p.displayName}</td>
+              <td class="px-2 w-full italic">{roleDescription}</td>
+            </tr>
           );
         })}
-      </ul>
+        </tbody>
+      </table>
     </Card>
   );
 };
@@ -65,7 +63,7 @@ const roleIcons: Record<string, string> = {
   percival: "🧑‍✈️",
   servant: "🧑‍🌾",
   morgana: "🧙‍♀️",
-  mordred: "🧛‍♂️",
+  mordred: "🧛",
   oberon: "🤴",
   minion: "👹",
   unknown: "❓",

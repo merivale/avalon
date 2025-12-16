@@ -29,7 +29,7 @@ export default ({
       disabled={disabled}
       class={`${variantClasses} ${
         className ?? ""
-      } text-white py-1 px-2 cursor-pointer disabled:cursor-not-allowed`}
+      } text-white py-2 px-4 nowrap cursor-pointer disabled:cursor-not-allowed`}
     >
       {children}
     </button>

@@ -1,7 +1,7 @@
 import Button from "@/components/Button.tsx";
 import Card from "@/components/Card.tsx";
 import Error from "@/components/Error.tsx";
-import { isGood } from "@/core/gameConfig.ts";
+import { isGood, teamList } from "@/core/gameConfig.ts";
 import type { Game, Player } from "@/core/types.ts";
 import type { VNode } from "preact";
 
@@ -25,10 +25,7 @@ export default ({ game, player, error }: Props): VNode => {
     <Card class="grid-span-2 flex flex-col gap-4">
       {error && <Error message={error} />}
       <div class="flex gap-4 justify-between">
-        <p>
-          {teamMembers.map((p) => p.displayName).join(", ")}{" "}
-          are going on a quest...
-        </p>
+        <p class="py-2">{teamList(teamMembers)} are going on a quest...</p>
         {isOnQuest && (
           playersVote === undefined
             ? (
@@ -44,7 +41,7 @@ export default ({ game, player, error }: Props): VNode => {
               </div>
             )
             : (
-              <p>
+              <p class="py-2">
                 You have voted to {playersVote ? "succeed" : "fail"}{" "}
                 this mission.
               </p>
