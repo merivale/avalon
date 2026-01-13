@@ -17,26 +17,7 @@ export default ({ children, player }: Page): VNode => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Avalon</title>
         <link rel="stylesheet" href="/assets/styles.css" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Server-Sent Events for real-time game updates
-              if (window.location.pathname.startsWith('/game/')) {
-                const gameId = window.location.pathname.split('/')[2];
-                const eventSource = new EventSource('/game/' + gameId + '/events');
-                eventSource.onmessage = function(event) {
-                  if (event.data === 'update') {
-                    window.location.reload();
-                  }
-                };
-                eventSource.onerror = function() {
-                  eventSource.close();
-                  setTimeout(function() { window.location.reload(); }, 3000);
-                };
-              }
-            `,
-          }}
-        />
+        <script src="/assets/main.js" defer></script>
       </head>
       <body>
         <header class="bg-white shadow">
@@ -63,7 +44,7 @@ export default ({ children, player }: Page): VNode => {
           </Container>
         </header>
         <main>
-          <Container>{children}</Container>
+          <Container id="content">{children}</Container>
         </main>
       </body>
     </html>

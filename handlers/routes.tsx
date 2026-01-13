@@ -15,6 +15,7 @@ import {
   handleGameEvents,
   handleGameView,
   handleIndex,
+  handleJavaScript,
   handleStylesheet,
 } from "@/handlers/views.tsx";
 
@@ -23,6 +24,10 @@ export default [
   {
     pattern: new URLPattern({ pathname: "/assets/styles.css" }),
     handler: handleStylesheet,
+  },
+  {
+    pattern: new URLPattern({ pathname: "/assets/main.js" }),
+    handler: handleJavaScript,
   },
   // game views
   {

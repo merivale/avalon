@@ -3,12 +3,14 @@ import routes from "@/handlers/routes.tsx";
 import { getPlayerId, setPlayerIdCookie } from "@/utils/session.ts";
 import { getOrCreatePlayer } from "@/utils/database.ts";
 import fixtures from "@/utils/fixtures.ts";
+import { sendHeartbeat } from "@/utils/sse.tsx";
 
 fixtures();
 
 const port = 8080;
 
 const onListen = () => {
+  setInterval(sendHeartbeat, 30000);
   console.log(`Server running on http://localhost:${port}`);
 };
 

@@ -11,11 +11,11 @@ import { validateVoteOnTeam, voteOnTeam } from "@/core/voteOnTeam.ts";
 import type { HandlerArgs } from "@/handlers/types.ts";
 import { getGame, saveGame, savePlayer } from "@/utils/database.ts";
 import { redirectResponse } from "@/utils/response.tsx";
-import { broadcastGameUpdate } from "@/utils/sse.ts";
+import { broadcastGameUpdate } from "@/utils/sse.tsx";
 
 // update player's display name
 export const handleUpdateName = async (
-  { request, player }: HandlerArgs,
+  { player, request }: HandlerArgs,
 ): Promise<Response> => {
   const formData = await request.formData();
   const displayName = formData.get("displayName")?.toString().trim();
@@ -32,7 +32,7 @@ export const handleUpdateName = async (
 
 // create a new game and add the player who created it
 export const handleNewGame = async (
-  { request, player }: HandlerArgs,
+  { player, request }: HandlerArgs,
 ): Promise<Response> => {
   const game = joinGame(newGame(), player);
   await saveGame(game);
@@ -41,7 +41,7 @@ export const handleNewGame = async (
 
 // join an existing game
 export const handleJoinGame = async (
-  { request, player }: HandlerArgs,
+  { player, request }: HandlerArgs,
 ): Promise<Response> => {
   const formData = await request.formData();
   const gameId = formData.get("gameId")?.toString().trim();
@@ -71,7 +71,7 @@ export const handleJoinGame = async (
 
   const updatedGame = joinGame(game, player);
   await saveGame(updatedGame);
-  broadcastGameUpdate(gameId);
+  broadcastGameUpdate(updatedGame);
   return redirectResponse(`/game/${gameId}`, request);
 };
 
@@ -106,14 +106,14 @@ export const handleStartGame = async (
 
   const updatedGame = startGame(game, specialRoles);
   await saveGame(updatedGame);
-  broadcastGameUpdate(gameId);
+  broadcastGameUpdate(updatedGame);
 
   return redirectResponse(`/game/${gameId}`, request);
 };
 
 // propose a team for the current mission
 export const handleProposeTeam = async (
-  { match, request, player }: HandlerArgs,
+  { match, player, request }: HandlerArgs,
 ): Promise<Response> => {
   const gameId = match.pathname.groups.id!;
   const game = await getGame(gameId);
@@ -143,14 +143,14 @@ export const handleProposeTeam = async (
 
   const updatedGame = proposeTeam(game, player.id, proposedPlayerIds);
   await saveGame(updatedGame);
-  broadcastGameUpdate(gameId);
+  broadcastGameUpdate(updatedGame);
 
   return redirectResponse(`/game/${gameId}`, request);
 };
 
 // approve the proposed team for the current mission
 export const handleApproveTeam = async (
-  { match, request, player }: HandlerArgs,
+  { match, player, request }: HandlerArgs,
 ): Promise<Response> => {
   const gameId = match.pathname.groups.id!;
   const game = await getGame(gameId);
@@ -169,14 +169,14 @@ export const handleApproveTeam = async (
 
   const updatedGame = voteOnTeam(game, player.id, true);
   await saveGame(updatedGame);
-  broadcastGameUpdate(gameId);
+  broadcastGameUpdate(updatedGame);
 
   return redirectResponse(`/game/${gameId}`, request);
 };
 
 // reject the proposed team for the current mission
 export const handleRejectTeam = async (
-  { match, request, player }: HandlerArgs,
+  { match, player, request }: HandlerArgs,
 ): Promise<Response> => {
   const gameId = match.pathname.groups.id!;
   const game = await getGame(gameId);
@@ -195,14 +195,14 @@ export const handleRejectTeam = async (
 
   const updatedGame = voteOnTeam(game, player.id, false);
   await saveGame(updatedGame);
-  broadcastGameUpdate(gameId);
+  broadcastGameUpdate(updatedGame);
 
   return redirectResponse(`/game/${gameId}`, request);
 };
 
 // vote to succeed the current mission
 export const handleSucceedMission = async (
-  { match, request, player }: HandlerArgs,
+  { match, player, request }: HandlerArgs,
 ): Promise<Response> => {
   const gameId = match.pathname.groups.id!;
   const game = await getGame(gameId);
@@ -221,14 +221,14 @@ export const handleSucceedMission = async (
 
   const updatedGame = voteOnQuest(game, player.id, true);
   await saveGame(updatedGame);
-  broadcastGameUpdate(gameId);
+  broadcastGameUpdate(updatedGame);
 
   return redirectResponse(`/game/${gameId}`, request);
 };
 
 // vote to fail the current mission
 export const handleFailMission = async (
-  { match, request, player }: HandlerArgs,
+  { match, player, request }: HandlerArgs,
 ): Promise<Response> => {
   const gameId = match.pathname.groups.id!;
   const game = await getGame(gameId);
@@ -247,14 +247,14 @@ export const handleFailMission = async (
 
   const updatedGame = voteOnQuest(game, player.id, false);
   await saveGame(updatedGame);
-  broadcastGameUpdate(gameId);
+  broadcastGameUpdate(updatedGame);
 
   return redirectResponse(`/game/${gameId}`, request);
 };
 
 // assassinate Merlin to win the game for Evil
 export const handleAssassinateMerlin = async (
-  { match, request, player }: HandlerArgs,
+  { match, player, request }: HandlerArgs,
 ): Promise<Response> => {
   const gameId = match.pathname.groups.id!;
   const game = await getGame(gameId);
@@ -302,7 +302,7 @@ export const handleAssassinateMerlin = async (
 
   const updatedGame = assassinateMerlin(game, targetPlayerId!);
   await saveGame(updatedGame);
-  broadcastGameUpdate(gameId);
+  broadcastGameUpdate(updatedGame);
 
   return redirectResponse(`/game/${gameId}`, request);
 };
