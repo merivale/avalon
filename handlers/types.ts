@@ -11,3 +11,10 @@ export type HandlerArgs = {
 };
 
 export type Route = { pattern: URLPattern; handler: Handler; method?: string };
+
+export type Connection = {
+  controller: Controller;
+  playerId: string;
+};
+
+export type Controller = ReadableStreamDefaultController<Uint8Array>;

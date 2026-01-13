@@ -6,10 +6,13 @@ import Index from "@/pages/Index.tsx";
 import Preparing from "@/pages/Preparing.tsx";
 import { getGame } from "@/utils/database.ts";
 import { fileResponse, htmlResponse } from "@/utils/response.tsx";
-import { createSSEStream } from "@/utils/sse.ts";
+import { createSSEStream } from "@/utils/sse.tsx";
 
 export const handleStylesheet = () =>
   fileResponse("./assets/styles.css", "text/css");
+
+export const handleJavaScript = () =>
+  fileResponse("./assets/main.js", "application/javascript");
 
 export const handleIndex = ({ request, player }: HandlerArgs) => {
   const url = new URL(request.url);
@@ -40,7 +43,7 @@ export const handleGameView = async (
   return htmlResponse(<Page player={player}>{content}</Page>);
 };
 
-export const handleGameEvents = ({ match }: HandlerArgs) => {
+export const handleGameEvents = ({ match, player }: HandlerArgs) => {
   const gameId = match.pathname.groups.id!;
-  return createSSEStream(gameId);
+  return createSSEStream(gameId, player.id);
 };
