@@ -10,7 +10,9 @@ const subscribeToGameEvents = (gameId) => {
   eventSource.addEventListener("error", (error) => {
     console.error(`SSE connection error for game ${gameId}:`, error);
     if (eventSource.readyState === EventSource.CLOSED) {
-      console.log("SSE connection closed. EventSource will attempt to reconnect...");
+      console.log(
+        "SSE connection closed. EventSource will attempt to reconnect...",
+      );
     }
   });
 
