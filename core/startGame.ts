@@ -24,7 +24,6 @@ export const validateStartGame = (
 
   // Validate special role combinations
   const evilCount = getEvilCount(game.players.length);
-  const goodCount = game.players.length - evilCount;
 
   const options = { ...defaultOptions, ...overrides };
 
@@ -34,17 +33,8 @@ export const validateStartGame = (
     options.oberon,
   ].filter(Boolean).length;
 
-  const goodSpecialRoles = [
-    options.merlin,
-    options.percival,
-  ].filter(Boolean).length;
-
   if (evilSpecialRoles > evilCount) {
     return "Too many evil special roles for the number of evil players";
-  }
-
-  if (goodSpecialRoles > goodCount) {
-    return "Too many good special roles for the number of good players";
   }
 
   // Percival requires Merlin

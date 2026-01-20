@@ -1,4 +1,4 @@
-import { Player, Role } from "@/core/types.ts";
+import type { Player, Role } from "@/core/types.ts";
 
 // number of players
 export const MAX_PLAYERS = 10;
