@@ -78,7 +78,7 @@ const gameConnections = new Map<string, Set<Connection>>();
 // Text encoder and pre-encoded SSE messages
 const textEncoder = new TextEncoder();
 const CONNECTED_MESSAGE = textEncoder.encode(": connected\n\n");
-const HEARTBEAT_MESSAGE = textEncoder.encode(": heartbeat\n\n");
+const HEARTBEAT_MESSAGE = textEncoder.encode("event: heartbeat\ndata: \n\n");
 
 // Register a new SSE connection for a game
 const registerConnection = (
