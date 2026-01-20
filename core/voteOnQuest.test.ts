@@ -4,7 +4,7 @@ import {
   createTestQuest,
   createTestTeamProposal,
 } from "@/core/testUtils.ts";
-import type { Game, Quest } from "@/core/types.ts";
+import type { Game } from "@/core/types.ts";
 import { validateVoteOnQuest, voteOnQuest } from "@/core/voteOnQuest.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
@@ -275,15 +275,15 @@ describe("voteOnQuest", () => {
       leaderIndex: 4,
       quests: [
         createTestQuest({
-      stage: "questing",
-      teamProposals: [
-        createTestTeamProposal({
-          leaderId: "player-5",
-          teamMemberIds: ["player-1", "player-2"],
+          stage: "questing",
+          teamProposals: [
+            createTestTeamProposal({
+              leaderId: "player-5",
+              teamMemberIds: ["player-1", "player-2"],
+            }),
+          ],
+          votes: { "player-1": true },
         }),
-      ],
-      votes: { "player-1": true },
-    }),
         createTestQuest(),
         createTestQuest(),
         createTestQuest(),

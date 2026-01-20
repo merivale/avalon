@@ -1,6 +1,6 @@
-import { describe, it } from "@std/testing/bdd";
-import { assertEquals, assertMatch } from "@std/assert";
 import newGame from "@/core/newGame.ts";
+import { assertEquals, assertMatch } from "@std/assert";
+import { describe, it } from "@std/testing/bdd";
 
 describe("newGame", () => {
   it("creates game with provided id", () => {

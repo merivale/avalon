@@ -1,5 +1,9 @@
 import { proposeTeam, validateProposeTeam } from "@/core/proposeTeam.ts";
-import { createTestGame, createTestPlayer, createTestQuest } from "@/core/testUtils.ts";
+import {
+  createTestGame,
+  createTestPlayer,
+  createTestQuest,
+} from "@/core/testUtils.ts";
 import type { Game } from "@/core/types.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
@@ -75,11 +79,31 @@ describe("validateProposeTeam", () => {
     const quest = createTestQuest({
       stage: "team-building",
       teamProposals: [
-        { leaderId: "player-1", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-2", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-3", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-4", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-5", teamMemberIds: ["player-1", "player-2"], votes: {} },
+        {
+          leaderId: "player-1",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-2",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-3",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-4",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-5",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
       ],
     });
     const game = createTestPlayingGame({
@@ -149,10 +173,26 @@ describe("proposeTeam", () => {
     const quest = createTestQuest({
       stage: "team-building",
       teamProposals: [
-        { leaderId: "player-1", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-2", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-3", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-4", teamMemberIds: ["player-1", "player-2"], votes: {} },
+        {
+          leaderId: "player-1",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-2",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-3",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-4",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
       ],
     });
     const game = createTestPlayingGame({
@@ -173,10 +213,26 @@ describe("proposeTeam", () => {
     const quest = createTestQuest({
       stage: "team-building",
       teamProposals: [
-        { leaderId: "player-1", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-2", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-3", teamMemberIds: ["player-1", "player-2"], votes: {} },
-        { leaderId: "player-4", teamMemberIds: ["player-1", "player-2"], votes: {} },
+        {
+          leaderId: "player-1",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-2",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-3",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
+        {
+          leaderId: "player-4",
+          teamMemberIds: ["player-1", "player-2"],
+          votes: {},
+        },
       ],
     });
     const game = createTestPlayingGame({

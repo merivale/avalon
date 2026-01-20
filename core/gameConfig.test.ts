@@ -1,6 +1,3 @@
-import { describe, it } from "@std/testing/bdd";
-import { assertEquals } from "@std/assert";
-import type { Player, Role } from "@/core/types.ts";
 import {
   getEvilCount,
   getRequiredFails,
@@ -10,6 +7,9 @@ import {
   isGood,
   teamList,
 } from "@/core/gameConfig.ts";
+import type { Player, Role } from "@/core/types.ts";
+import { assertEquals } from "@std/assert";
+import { describe, it } from "@std/testing/bdd";
 
 describe("getEvilCount", () => {
   it("returns 2 for 5-6 players", () => {

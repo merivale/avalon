@@ -5,8 +5,9 @@ import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 
 const createTestGameWithNPlayers = (n: number): Game => {
-  const players = Array.from({ length: n }, (_, i) =>
-    createTestPlayer({ id: `player-${i + 1}` })
+  const players = Array.from(
+    { length: n },
+    (_, i) => createTestPlayer({ id: `player-${i + 1}` }),
   );
   return createTestGame({ players });
 };

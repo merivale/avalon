@@ -4,7 +4,7 @@ import {
   createTestQuest,
   createTestTeamProposal,
 } from "@/core/testUtils.ts";
-import type { Game, Quest } from "@/core/types.ts";
+import type { Game } from "@/core/types.ts";
 import { validateVoteOnTeam, voteOnTeam } from "@/core/voteOnTeam.ts";
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
