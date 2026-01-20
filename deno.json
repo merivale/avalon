@@ -5,7 +5,8 @@
     "check": "deno check client && deno check core && deno check server && deno check ui && deno check main.ts",
     "lint": "deno fmt --check && deno lint",
     "lint:fix": "deno fmt && deno lint --fix",
-    "test:core": "deno test core/"
+    "test:core": "deno test core/",
+    "test": "deno task test:core"
   },
   "imports": {
     "@/": "./",
