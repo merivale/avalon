@@ -2,4 +2,4 @@ import server from "@/server/server.ts";
 
 server.start(8080);
 server.setupFixtures();
-server.setupSSEHeartbeat(30000);
+server.setupSSEHeartbeat(10000);
