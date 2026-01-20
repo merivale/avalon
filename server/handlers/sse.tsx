@@ -1,4 +1,5 @@
 import type { Game } from "@/core/types.ts";
+import { getPlayer } from "@/server/persistence/database.ts";
 import type { Connection, Controller, HandlerArgs } from "@/server/types.ts";
 import GamePage from "@/ui/Game.tsx";
 import { renderToString } from "preact-render-to-string";
@@ -33,14 +34,14 @@ export const handleGameEvents = ({ match, player }: HandlerArgs) => {
 };
 
 // Broadcast an update message to all connected clients for a game
-export const broadcastGameUpdate = (game: Game): void => {
+export const broadcastGameUpdate = async (game: Game): Promise<void> => {
   const connections = gameConnections.get(game.id);
   if (!connections) return;
 
   for (const connection of connections) {
     try {
-      const player = game.players.find((p) => p.id === connection.playerId);
-      if (!player) continue; // Player not in game
+      const player = await getPlayer(connection.playerId);
+      if (!player) throw new Error("Player not found");
 
       const content = renderToString(
         <GamePage game={game} player={player} error={null} />,
